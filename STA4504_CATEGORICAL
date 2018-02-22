@@ -1,0 +1,230 @@
+##CHAPTER 1:
+ch1. world cup
+x<-c(0, 1, 2, 3, 4, 5, 6, 7)
+obs<-c(20,29, 16,3, 1, 0, 1, 0)
+dat<-cbind(x,obs); dat			*cbind= bind the obs in vertical columns
+sumgr<-sum(x*obs);sumgr
+mn<-sumgr/sum(obs);mn
+mu<-1.143
+px<-dpois(x,mu);px
+n<-sum(obs);n
+expec<-n*px;expec
+data.frame(x,px,obs,expec
+
+small sample
+
+###Exact Test
+nbin<-20
+pi<-0.05
+pval-1-dbinom(0,nbin,pi)-dbinom(1,nbin,pi);pval
+pvalue<-pbinom(2,nbin,pi,lower.tail=F);pvalue			*dbinom when p(X=x)
+1-pbinom(1,nbin,pi)	
+								*pbinom when P(X<x)
+###MULTINOMIAL
+xm<-c(190, 198, 187, 225)
+nm<-sum(xm);nm
+pi0<-c(1/4, 1/4, 1/4, 1/4)
+exp<-nm*pi0;diff
+dif<-(xm-exp)^2/exp;dif
+xsquare<-sum(dif);xsquare
+crit<-qchisq(0.05, 3 lower.tial=F);crit
+pval<-pchisq(xsquare, 3, lower.tail=F);pval
+
+?				*?= takes you to browser to show uses of expressions
+				
+
+
+
+------------------------------------------------------------
+
+
+
+CHAPTER 2:
+###Computing marginal, joint, and conditional 
+afterlif<-matrix(c(435, 147, 375, 134),nrow=2, byrow=TRUE); afterlife
+dimnames(afterlife)<-list(c(“Female”, “male”), c(“Yes”, “no))
+names(dimnames(afterlife))<-c(“gender”, “believer”)
+
+
+tot<-sum(afterlife);
+
+rowtot<-apply(afterlife, 1, sum); rowtot
+coltot<-apply(afterlife, 2, sum);coltot
+matrix(c(435,147,375,134)nrow=2)
+afterlife
+tot<-sum(afterlife);tot
+afterlife/tot
+rowtot<-apply(afterlife,1,sum);rowtot
+coltot<-apply(afterlife,2,sum);coltot
+
+rowpct<-sweep(afterlife,1,rowtot,”/“);rowpct
+round(rowpct,3)
+colpct<-sweep(afterlife,2,coltot,”/“);colpct
+round(colpct,3)
+
+
+###Difference in proportions, RR odds, odds ratios
+
+phs<-matrix(c(189,10845, 104, 10933), ncol=2, byrow=T);phs
+dimnames(phs)<-list(Group=c(“Placebo”,”Aspririn”), MI=c(“yes”,”no”))
+phs
+prop.test(phs)
+	###test ho: pi1=pi2 ha: pi1 != pi2
+	###2-sample test for equality of proportions with continuity correction
+	?prop.test
+
+phs.test<-prop.test(phs)
+names(phs.test)
+phs.test$estimate
+phs.test$conf.int
+phs.test$estimate[1] / phs.test$estimate[2] 
+	### RR
+
+odds<-phs.test$estimate/(1-phs.test$estimate);odds
+odds[1]/odds[2]
+	##odds ratio
+(phs[1,1]*phs[2,2])/ (phs[2,1]*phs[1,2]
+	##odds ratio alternative
+
+
+###Confidence Intervals
+theta<-odds[1]/odds[2]
+ase<-sqrt(sum(1/phs)); ase
+logtheta.ci<-log(theta)+c(-1,1)*1.96*ase
+logtheta.ci
+exp(logtheta.ci)
+
+March 1, 2016 NOTES:
+
+### Chi square test, square test, fischers exact test
+gendergap<- matrix(c(279,73, 225, 165, 47, 191) byrow=TRUE, nrow=2)
+disnames(gendergap) <-list(Gender=c(“Females”, Males”), PartyID=c(“Democrats”, “Independent”, “Republican”))
+gendergap
+
+chisq.test(gendergap)
+	###from class (approximation)
+chisq.test(gendergap, simulate.p.value=TRUE, B=10000)
+	###df==0
+
+
+fisher.test(gendergap)
+
+
+
+
+### No code for the G^2. Suggested not to use.
+
+rtot<-apply(gendergap, 1, sum); rtot
+ctot<-apply(gendergap,2, sum); ctot
+n<-sum(gendergap); n
+mu<-rtot%*%t(ctot)/n; mu
+df<-(nrow(gendergap)-1)*(ncol(gendergap)-1); df
+g<-2*sum(gendergap*log(gendergap/mu)); g
+pval<-1-pchisq(g,df); pval
+
+
+
+
+------------------------------------------------------------
+
+
+#LATER CHAPTERS:
+
+data<-read.table(”crab.txt”, header=T)
+names(data)
+attach(data)
+color
+weight<-weight/1000;color=color-1;
+satll
+satll<-ifelse(satell>0,1,0)
+fit<-glm(satell~width,family=binomial(logit))
+summary(fit)
+names(fit)
+coef(fit)
+fit$coefficients
+fitn<-glm(satell~width,family=binomial)
+fitn
+beta<-coef(fit)[2];beta
+vb<-vcov(fit);vb
+	##vb[row,col]
+seb<-sqrt(vb[2,2]);seb
+alpha<-.05
+wald.ci<-beta+c(-1,1)*qnorm(1-alpha/2)*seb;wald.ci
+ebci<-exp(wald.ci)
+
+##likelihood ratio ci
+lrci<-lr[2,]
+elrci<-exp(lr)ci
+
+#wald test
+wald<-beta/seb;waldt
+pvalue=2*pnorm(waldt,lower.tail=F);
+null<-fit$null.deviance;
+res<-fit$deviance;res
+lrt<-nul-res;
+new<-data.fram(width = 26.5)
+preddnew<-predict(object=fit,newdata = new, type = “response”, se = TRUE)
+
+ci<-prednew$fit+c(-1,1)*qnorm(1-alpha/2)*prednew$se;
+
+##using probit link
+fitp<-glm(satell~width, family=binomial(probit))
+new<-data.fram(width=26.5)
+prednewp<-predict(object = fitp, newdata = new, type = “response”, se = TRUE);prednewp
+cip<-prednew$fit+c(-1,1)*qnorm(1-alpha/2)*prednewp$se;cip
+
+##Zum one: azt and aids
+y<-cbind(c(14,32,11,12),c(93,81,52,43))
+
+x<-c(1,0,1,0)
+	##x=AZT true yes=1 no=0
+z<-c(1,1,0,0)
+	##z=Race, white=1, black=0
+fitd<-glm (y~x+z, family= binomial
+
+
+##EXamle 1 Using ANOVA
+table.4.3<-expand.grid(azt=factor(c(“yes”,”no”), levels=c(“no”,”yes”)), +race=factor(c(“white”,”black”), levels=c(“black”, “white”)))
+table.4.3<-data.fram(table.4.3, yes=c(14,32,11,12), no=c(93,81,52,43))
+options(contrasts=c(“contr.treatment”,”contr.poly”))
+fita<-glm(cbind(yes,no) ~azt+race, family=binomial, data=table.4.3)
+y
+fita
+fitred<-update(fita,~.-azt)
+
+
+##Fitting the reduced model
+fitl<-glm(cbind(yes,no)~race,family=binomial, data=table.4.3)
+fitl
+
+
+##Testing the impact of AZT
+nulcl<-fitl$null.deviance;nulcl
+rescl<-fitl$deviance;rescl
+
+resc<-fita$deviance;resc
+lrtm<-rescl-resc; lrtm
+anova(fitred,fita,test=“Chi”)
+
+anova(fita,fitred,test=“Chi”)
+
+drop1(fita,test=“Chisq”)
+
+colfac<-factor(data$color,levels=c(“5”,”4”,”3”,”2”),labels=c(“dark”,”med-dark” +, “med”,”med-light”))
+crabfit<-glm(satell~colfac+width, family=binomial)
+sumary(crabfit)
+drop1(crabfit,test=“Chisq”)
+confit(crabfit)
+
+
+
+
+
+
+
+
+
+
+
+
+
